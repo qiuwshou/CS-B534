@@ -1,0 +1,11 @@
+```
+java SequentialMLR 1.0 10000 47236 ~/rcv1v2/rcv1.topics.txt ~/rcv1v2/rcv1-v2.topics.qrels ~/rcv1v2/lyrl2004_vectors_train.dat weights
+```
+
+```
+java Verify 47236 ~/rcv1v2/rcv1.topics.txt ~/rcv1v2/rcv1-v2.topics.qrels ~/rcv1v2/lyrl2004_vectors_test_pt0.dat weights result
+```
+
+```
+hadoop jar build/harp3-app-hadoop-2.6.0.jar edu.iu.MLR.MLRMapCollective 1.0 100 47236 2 16 /rcv1v2/rcv1.topics.txt /rcv1v2/rcv1-v2.topics.qrels /rcv1v2/input /MLR/
+```

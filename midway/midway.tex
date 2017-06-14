@@ -1,0 +1,53 @@
+\documentclass[12pt]{article}
+\usepackage[margin=.7in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{mathpartir}
+\usepackage{scrextend}
+\usepackage{hyperref}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\begin{document}
+
+\title{Multiclass Logistic Regression using Harp}
+\author{Chao-Hong Chen\\Qiuwei Shou} 
+\maketitle
+
+\section{Introduction}
+In this work, we will try to apply Harp\cite{harp} on Multiclass Logistic Regression.
+The algorithm we use will be based on Stochastic Average Gradient descent\cite{Schmidt2016}.
+The reference implementations are \cite{logistic-regression} and scikit-learn\cite{scikit-learn} which is a python library,
+we will port the SAG(Stochastic Average Gradient descent) solver to Java,
+and use Harp to parallel the algorithm to handle large datasets.
+\section{Related work}
+under construction
+\section{Algorithm}
+\subsection{Stochastic Average Gradient descent}
+We will only consider about the basic SAG method in \cite{Schmidt2016}.
+The algorithm is outline below:
+\begin{algorithm}[htb]
+  \caption{Basic SAG for minimizing $\frac{1}{n}\sum_{i=1}^n f_i(x)$ with step size $\alpha$ for $iter$ iterations.}
+  \label{alg:sag}
+  \begin{algorithmic}[1]
+    \State $d = 0$, $y_i = 0$ for $i = 1,2,\ldots,n$
+    \For{$k=0$ to $iter$}
+    \State Sample $i$ from $\{1,2,\ldots,n\}$
+    \State $d = d - y_i + f_i'(x)$
+    \State $y_i = f_i'(x)$
+    \State $x = x - \frac{\alpha}{n}d$
+    \EndFor
+  \end{algorithmic}
+\end{algorithm}
+
+\subsection{Parallel Stochastic Average Gradient descent}
+SGD is a first order optimization for maximum likelihood estimation of MLR. The algorithm is not designed for the distributed system. But its parts can be reused with Hadoop Mapreduce or Harp. The algorithm is expected to be scaled horizontally with parallelizing its iterative optimization process. 
+\section{Evaluation}
+In this section we will conducting evaluation of our algorithm using RCV1\cite{Lewis:2004:RNB:1005332.1005345}.
+The evaluation is measure by comparing the execution time of sequential code with the one of parallel version, running on the RCV1 dataset. Moreover, analyzing the in-memory cache might be an interesting point to see how resource is allocated and managed by the Harp. Map/Reduce strategy might create many new pairwise objects which cause garbage collection problem. If the parallelization is successful  memory consumption of hadoop namenode is another angle to evaluate the performance of the parallelize algorithm. 
+\section{Conclusion}
+The parallel version is expected to run faster the sequential version.
+
+\bibliographystyle{abbrv}
+\bibliography{refs}
+
+\end{document}
